@@ -1,9 +1,9 @@
 package com.user.userServiceSpringApplication.kafka.consumer;
 
-import com.user.userServiceSpringApplication.entity.User;
-import com.user.userServiceSpringApplication.entity.UserKafkaOutbox;
-import com.user.userServiceSpringApplication.repository.UserKafkaOutboxRepository;
-import com.user.userServiceSpringApplication.repository.UserRepository;
+import com.user.userServiceSpringApplication.user.entity.User;
+import com.user.userServiceSpringApplication.outbox.entity.UserKafkaOutbox;
+import com.user.userServiceSpringApplication.outbox.repo.UserKafkaOutboxRepository;
+import com.user.userServiceSpringApplication.user.repo.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +11,7 @@ import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.support.KafkaHeaders;
 import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import tools.jackson.databind.ObjectMapper;
 
 import java.util.UUID;
@@ -24,16 +25,23 @@ public class UserConsumer {
 
     private Logger logger = LoggerFactory.getLogger(UserConsumer.class);
 
-    @KafkaListener(topics = "${kafka.topic.name}", groupId = "user-group")
+//    @KafkaListener(topics = "${kafka.topic.name}", groupId = "user-group")
+    @Transactional
     public void consume(String message,  @Header(KafkaHeaders.RECEIVED_KEY) String outboxId){
-        UserKafkaOutbox outbox = userKafkaOutboxRepository.findById(UUID.fromString(outboxId)).orElseThrow();
-        outbox.setConsumed(true);
-        userKafkaOutboxRepository.save(outbox);
+        logger.info("OutboxId: {}", outboxId);
+        UserKafkaOutbox outbox = userKafkaOutboxRepository
+                .findById(UUID.fromString(outboxId))
+                .orElseThrow(() -> new RuntimeException("Outbox not found"));
 
-        if (outbox.isConsumed()) {
-            User user = convertToUser(outbox.getUserPayload());
+
+        logger.info("Getting User from Outbox: {}", outbox.getId().toString());
+
+        try {
+            User user = convertToUser(outbox.getUserPayload().asText());
             userRepository.save(user);
-            logger.info("user saved in database");
+            logger.info("User saved and outbox marked as consumed: {}", outbox.getId());
+        } catch (Exception e) {
+            throw new RuntimeException("User Creation Failed: "+e.getMessage());
         }
     }
 
