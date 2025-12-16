@@ -1,8 +1,7 @@
-package com.user.userServiceSpringApplication.entity;
+package com.user.userServiceSpringApplication.user.entity;
 
 import jakarta.persistence.*;
 import lombok.*;
-import org.apache.kafka.common.protocol.types.Field;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;

@@ -2,10 +2,11 @@ package com.user.userServiceSpringApplication.service;
 
 import com.user.userServiceSpringApplication.dto.UserRequest;
 import com.user.userServiceSpringApplication.dto.UserUpdateRequest;
-import com.user.userServiceSpringApplication.entity.User;
+import com.user.userServiceSpringApplication.user.entity.User;
 import com.user.userServiceSpringApplication.exception.EmailExistException;
-import com.user.userServiceSpringApplication.kafka.producer.UserProducer;
-import com.user.userServiceSpringApplication.repository.UserRepository;
+import com.user.userServiceSpringApplication.user.repo.UserRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
@@ -16,23 +17,23 @@ import java.util.*;
 public class UserService {
     @Autowired
     private UserRepository userRepository;
-    @Autowired
-    private UserProducer userProducer;
+    private static final Logger log = LoggerFactory.getLogger(UserService.class);
 
-    @Cacheable(value = "user-caching", key = "#userId")
+    @Cacheable(value = "user-caching", key = "#userId", unless = "#result == null")
     public User getUserById(UUID userId){
         System.out.println("👉 Fetching from DATABASE...");
         return userRepository.findById(userId).orElseThrow(()-> new RuntimeException("user not available"));
     }
 
-    public User createUser(UserRequest userRequest){
-        User user = new User();
-        user.setName(userRequest.getName());
-        user.setEmail(userRequest.getEmail());
-        user.setPassword(userRequest.getPassword());
-        user.setActive(userRequest.isActive());
-        //userProducer.sendUser(user);
-        return userRepository.save(user);
+    public User createUser(User user){
+        try {
+            log.info("Initiate to Save record in user db");
+            User userSaved = userRepository.save(user);
+            log.info("User record created: {}", userSaved.toString());
+            return userSaved;
+        } catch (Exception e) {
+            throw new RuntimeException("failed to create User!: "+ e.getMessage());
+        }
     }
 
 //    public List<User> createUsers(List<UserRequest> userRequest){
@@ -66,7 +67,7 @@ public class UserService {
                 user.setName(u.getName());
                 user.setEmail(u.getEmail());
                 user.setPassword(u.getPassword());
-                user.setActive(u.isActive());
+                user.setActive(u.getActive());
 
                 users.add(user);
             }

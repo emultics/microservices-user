@@ -2,11 +2,13 @@ package com.user.userServiceSpringApplication.controller;
 
 import com.user.userServiceSpringApplication.dto.UserRequest;
 import com.user.userServiceSpringApplication.dto.UserUpdateRequest;
-import com.user.userServiceSpringApplication.entity.User;
-import com.user.userServiceSpringApplication.kafka.producer.UserProducer;
+import com.user.userServiceSpringApplication.user.entity.User;
+import com.user.userServiceSpringApplication.enums.USEREVENT;
 import com.user.userServiceSpringApplication.service.UserOutboxService;
 import com.user.userServiceSpringApplication.service.UserService;
 import jakarta.validation.Valid;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,6 +26,8 @@ public class UserController {
     @Autowired
     private UserOutboxService userOutboxService;
 
+    private static final Logger log = LoggerFactory.getLogger(UserController.class);
+
     @GetMapping("/fetch/{id}")
     public ResponseEntity<User> getUserById(@PathVariable String id){
         UUID uuid = UUID.fromString(id);
@@ -32,10 +36,9 @@ public class UserController {
     }
 
     @PostMapping("/user/create")
-    public String createUser(@RequestBody UserRequest userRequest){
-        //User user = userService.createUser(userRequest);
-        //return ResponseEntity.status(HttpStatus.CREATED).body(user);
-        userOutboxService.createUserEvent(userRequest,"CREATE");
+    public String createUser(@Valid @RequestBody UserRequest userRequest){
+        log.info("Getting UserRequest Body: {}", userRequest.toString());
+        userOutboxService.createUserEvent(userRequest, USEREVENT.CREATE);
         return "User event saved to outbox and published";
     }
 
@@ -51,13 +54,13 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.CREATED).body(users);
     }
 
-    @PatchMapping("/user/{id}")
+    @PatchMapping("/db/migration/user/{id}")
     public ResponseEntity<User> updateUsers(@PathVariable String id, @RequestBody UserUpdateRequest userUpdateRequest){
         User user = userService.updateUsers(UUID.fromString(id),userUpdateRequest);
         return ResponseEntity.status(HttpStatus.CREATED).body(user);
     }
 
-    @DeleteMapping("user/{id}")
+    @DeleteMapping("db/migration/user/{id}")
     public String deleteUserById(@PathVariable UUID id){
         userService.deleteUserById(id);
         return "UserId: "+ id +" has been deleted";
