@@ -19,8 +19,6 @@ public class UserOutboxService {
     @Autowired
     private UserProducer userProducer;
 
-    private static final String TOPIC = "user-topic";
-
     public void createUserEvent(UserRequest user, String eventType){
         UserKafkaOutbox outbox = new UserKafkaOutbox();
         //outbox.setId(UUID.randomUUID());
