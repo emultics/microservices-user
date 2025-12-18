@@ -40,7 +40,6 @@ public class UserOutboxService {
             outbox.setAggregateId(savedUser.getId());
             userKafkaOutboxRepository.save(outbox);
             log.info("Payload going to produce in kafka, with EVENT: {}", USEREVENT.CREATE.toString());
-//            userProducer.sendUser(outbox.getId().toString(), outbox.getUserPayload());
             log.info("Payload successfully Saved!");
             log.info("Payload Successfully Published!");
         } catch (Exception e) {

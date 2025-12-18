@@ -11,12 +11,11 @@ import java.util.Optional;
 
 @Component
 public class Common {
-
-
     public static User fromUserRequestToUser(UserRequest userRequest){
         User user = new User();
         user.setName(userRequest.getName());
         user.setEmail(userRequest.getEmail());
+        user.setPassword(userRequest.getPassword());
         user.setIsActive(Optional.ofNullable(userRequest.getActive()).orElse(true));
         return user;
     }
