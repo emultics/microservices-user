@@ -67,7 +67,7 @@ public class UserService {
                 user.setName(u.getName());
                 user.setEmail(u.getEmail());
                 user.setPassword(u.getPassword());
-                user.setActive(u.getActive());
+                user.setIsActive(u.getActive());
 
                 users.add(user);
             }
@@ -101,7 +101,7 @@ public class UserService {
             user.setEmail(userRequest.getEmail());
         }
         if(!userRequest.isActive()) {
-            user.setActive(userRequest.isActive());
+            user.setIsActive(userRequest.isActive());
         }
     }
 

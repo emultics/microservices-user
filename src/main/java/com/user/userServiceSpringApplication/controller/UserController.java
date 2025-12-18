@@ -1,7 +1,9 @@
 package com.user.userServiceSpringApplication.controller;
 
+import com.user.userServiceSpringApplication.annotation.AuditRequest;
 import com.user.userServiceSpringApplication.dto.UserRequest;
 import com.user.userServiceSpringApplication.dto.UserUpdateRequest;
+import com.user.userServiceSpringApplication.enums.AuditEventType;
 import com.user.userServiceSpringApplication.user.entity.User;
 import com.user.userServiceSpringApplication.enums.USEREVENT;
 import com.user.userServiceSpringApplication.service.UserOutboxService;
@@ -12,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -28,6 +31,7 @@ public class UserController {
 
     private static final Logger log = LoggerFactory.getLogger(UserController.class);
 
+    @AuditRequest
     @GetMapping("/fetch/{id}")
     public ResponseEntity<User> getUserById(@PathVariable String id){
         UUID uuid = UUID.fromString(id);
@@ -35,6 +39,7 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(user);
     }
 
+    @AuditRequest
     @PostMapping("/user/create")
     public String createUser(@Valid @RequestBody UserRequest userRequest){
         log.info("Getting UserRequest Body: {}", userRequest.toString());

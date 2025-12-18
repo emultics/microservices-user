@@ -25,7 +25,7 @@ public class User implements Serializable {
     @Column(unique = true, nullable = false)
     private String email;
 
-    @Column(unique = true, nullable = true)
+    @Column(nullable = false)
     private String password;
 
     @Column(nullable = false)
@@ -42,13 +42,5 @@ public class User implements Serializable {
     @PreUpdate
     public void onUpdate(){
         this.updatedAt=LocalDateTime.now();
-    }
-
-    public Boolean getActive() {
-        return isActive;
-    }
-
-    public void setActive(Boolean active) {
-        isActive = active;
     }
 }

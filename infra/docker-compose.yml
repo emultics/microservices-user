@@ -12,6 +12,8 @@ services:
     ports:
       - "5433:5432"
     command: postgres -c wal_level=logical
+    networks:
+      - elk-net
 
   postgres-outbox:
     image: postgres:15
@@ -23,6 +25,9 @@ services:
     ports:
       - "5434:5432"
     command: postgres -c wal_level=logical
+    networks:
+      - elk-net
+
   pgadmin:
     image: dpage/pgadmin4:latest
     container_name: pgadmin
@@ -36,11 +41,15 @@ services:
     depends_on:
       - postgres-user
       - postgres-outbox
+    networks:
+      - elk-net
 
   zookeeper:
     image: confluentinc/cp-zookeeper:7.5.0
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
+    networks:
+      - elk-net
 
   kafka:
     image: confluentinc/cp-kafka:7.5.0
@@ -51,6 +60,8 @@ services:
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+    networks:
+      - elk-net
 
   debezium:
     image: debezium/connect:2.5
@@ -63,6 +74,8 @@ services:
       CONFIG_STORAGE_TOPIC: debezium_config
       OFFSET_STORAGE_TOPIC: debezium_offset
       STATUS_STORAGE_TOPIC: debezium_status
+    networks:
+      - elk-net
 
   redis:
     image: redis:latest
@@ -102,10 +115,15 @@ services:
     environment:
       KAFKA_CLUSTERS_0_NAME: local
       KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: kafka:9092
+    networks:
+      - elk-net
 
 volumes:
   redis-data:
 
 networks:
   redis-net:
+    driver: bridge
+  elk-net:
+    name: elk-net
     driver: bridge
