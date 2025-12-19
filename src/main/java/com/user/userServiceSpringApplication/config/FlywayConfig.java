@@ -13,7 +13,7 @@ import javax.sql.DataSource;
 @Configuration
 public class FlywayConfig {
     @Bean(initMethod = "migrate")
-    public Flyway userFlyway(@Qualifier("userDataSource")DataSource ds){
+    public Flyway userFlyway(@Qualifier(AppConstants.USER_DATASOURCE)DataSource ds){
         return Flyway.configure()
                 .dataSource(ds)
                 .locations(AppConstants.USER_FLYWAY_MIGRATION_LOCATION)
@@ -22,7 +22,7 @@ public class FlywayConfig {
     }
 
     @Bean(initMethod = "migrate")
-    public Flyway outBoxFlyway(@Qualifier("outboxDataSource")DataSource ds){
+    public Flyway outBoxFlyway(@Qualifier(AppConstants.OUTBOX_DATASOURCE)DataSource ds){
         return Flyway.configure()
                 .dataSource(ds)
                 .locations(AppConstants.OUTBOX_FLYWAY_MIGRATION_LOCATION)
