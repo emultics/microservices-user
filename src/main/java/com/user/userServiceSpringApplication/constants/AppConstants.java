@@ -27,5 +27,8 @@ public final class AppConstants {
     public static final String OUTBOX_ENTITY_MANAGER_FACTORY = "outboxEntityManagerFactory";
     public static final String USER_FLYWAY_MIGRATION_LOCATION = "classpath:db/migration/user";
     public static final String OUTBOX_FLYWAY_MIGRATION_LOCATION = "classpath:db/migration/outbox";
+    public static final String FLYWAY_INIT_MIGRATE = "migrate";
+
+    public static final String AUDIT_OUTBOX_ENTITY_NAME = "audit_outbox";
 
 }

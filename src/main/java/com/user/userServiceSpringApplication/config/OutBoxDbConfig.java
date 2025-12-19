@@ -23,7 +23,7 @@ import javax.sql.DataSource;
         transactionManagerRef = AppConstants.OUTBOX_TRANSACTION_MANAGER
 )
 public class OutBoxDbConfig {
-    @Bean("outboxDataSource")
+    @Bean(AppConstants.OUTBOX_DATASOURCE)
     @ConfigurationProperties(prefix = AppConstants.OUTBOX_DATASOURCE_PROPERTIES_PREFIX)
     public DataSource outboxDataSource(){
         return new HikariDataSource();
