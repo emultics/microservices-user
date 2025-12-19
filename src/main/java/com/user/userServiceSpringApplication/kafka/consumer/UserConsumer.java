@@ -1,13 +1,12 @@
 package com.user.userServiceSpringApplication.kafka.consumer;
 
 import com.user.userServiceSpringApplication.user.entity.User;
-import com.user.userServiceSpringApplication.outbox.entity.UserKafkaOutbox;
-import com.user.userServiceSpringApplication.outbox.repo.UserKafkaOutboxRepository;
+import com.user.userServiceSpringApplication.user.entity.UserKafkaOutbox;
+import com.user.userServiceSpringApplication.user.repo.UserKafkaOutboxRepository;
 import com.user.userServiceSpringApplication.user.repo.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.kafka.support.KafkaHeaders;
 import org.springframework.messaging.handler.annotation.Header;
 import org.springframework.stereotype.Service;
