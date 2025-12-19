@@ -1,6 +1,7 @@
 package com.user.userServiceSpringApplication.config;
 
 
+import com.user.userServiceSpringApplication.constants.AppConstants;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
@@ -23,9 +24,9 @@ public class redisConfig {
     @Bean
     public RedisStandaloneConfiguration redisStandaloneConfiguration(){
         RedisStandaloneConfiguration config =
-                new RedisStandaloneConfiguration("localhost", 6379);
-        config.setUsername("default");
-        config.setPassword(RedisPassword.of("redis!"));
+                new RedisStandaloneConfiguration(AppConstants.REDIS_HOST, AppConstants.REDIS_PORT);
+        config.setUsername(AppConstants.REDIS_USERNAME);
+        config.setPassword(RedisPassword.of(AppConstants.REDIS_PASSWORD));
         return config;
     }
 
