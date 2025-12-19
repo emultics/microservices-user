@@ -9,7 +9,7 @@ import org.springframework.context.annotation.DependsOn;
 
 import javax.sql.DataSource;
 
-@DependsOn({"userDataSource", "outboxDataSource"})
+@DependsOn({AppConstants.USER_DATASOURCE, AppConstants.OUTBOX_DATASOURCE})
 @Configuration
 public class FlywayConfig {
     @Bean(initMethod = "migrate")

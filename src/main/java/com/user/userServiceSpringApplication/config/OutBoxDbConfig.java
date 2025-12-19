@@ -18,13 +18,13 @@ import javax.sql.DataSource;
 
 @Configuration
 @EnableJpaRepositories(
-        basePackages = "com.user.userServiceSpringApplication.outbox.repo",
-        entityManagerFactoryRef = "outboxEntityManagerFactory",
-        transactionManagerRef = "outboxTransactionManager"
+        basePackages = AppConstants.OUTBOX_REPOSITORY_PACKAGE,
+        entityManagerFactoryRef = AppConstants.OUTBOX_ENTITY_MANAGER_FACTORY,
+        transactionManagerRef = AppConstants.OUTBOX_TRANSACTION_MANAGER
 )
 public class OutBoxDbConfig {
     @Bean("outboxDataSource")
-    @ConfigurationProperties(prefix = "spring.datasource.outbox")
+    @ConfigurationProperties(prefix = AppConstants.OUTBOX_DATASOURCE_PROPERTIES_PREFIX)
     public DataSource outboxDataSource(){
         return new HikariDataSource();
     }
@@ -35,12 +35,12 @@ public class OutBoxDbConfig {
     ){
         return builder.dataSource(outboxDataSource())
                 .packages(AppConstants.OUTBOX_ENTITY_PACKAGE)
-                .persistenceUnit("outboxPU")
+                .persistenceUnit(AppConstants.OUTBOX_PERSISTENCE_UNIT)
                 .build();
     }
 
     @Bean
-    public PlatformTransactionManager outboxTransactionManager(@Qualifier("outboxEntityManagerFactory") EntityManagerFactory emf){
+    public PlatformTransactionManager outboxTransactionManager(@Qualifier(AppConstants.OUTBOX_ENTITY_MANAGER_FACTORY) EntityManagerFactory emf){
         return new JpaTransactionManager(emf);
     }
 
