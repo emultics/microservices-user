@@ -1,5 +1,6 @@
 package com.user.userServiceSpringApplication.config;
 
+import com.user.userServiceSpringApplication.constants.AppConstants;
 import com.zaxxer.hikari.HikariDataSource;
 import jakarta.persistence.EntityManagerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -33,7 +34,7 @@ public class OutBoxDbConfig {
             EntityManagerFactoryBuilder builder
     ){
         return builder.dataSource(outboxDataSource())
-                .packages("com.user.userServiceSpringApplication.outbox.entity")
+                .packages(AppConstants.OUTBOX_ENTITY_PACKAGE)
                 .persistenceUnit("outboxPU")
                 .build();
     }

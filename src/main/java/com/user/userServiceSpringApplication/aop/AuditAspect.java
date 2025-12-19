@@ -1,6 +1,7 @@
 package com.user.userServiceSpringApplication.aop;
 
 import com.user.userServiceSpringApplication.annotation.AuditRequest;
+import com.user.userServiceSpringApplication.constants.AppConstants;
 import com.user.userServiceSpringApplication.dto.AuditEvent;
 import com.user.userServiceSpringApplication.enums.AuditEventType;
 import com.user.userServiceSpringApplication.outbox.entity.AuditOutBox;
@@ -52,7 +53,7 @@ public class AuditAspect {
                     .httpMethod(request.getMethod())
                     .uri(request.getRequestURI())
                     .clientIp(request.getRemoteAddr())
-                    .userAgent(request.getHeader("User-Agent"))
+                    .userAgent(request.getHeader(AppConstants.USER_AGENT))
                     .request(mask(pjp.getArgs()))
                     .response(mask(response))
                     .executionTimeMs(time)
@@ -80,7 +81,7 @@ public class AuditAspect {
         if(obj==null) return null;
         String jsonObject = JsonUtil.toJson(obj);
         return jsonObject.toString().replaceAll(
-                "(\"(password|otp|token|jwt)\"\\s*:\\s*\")[^\"]+(\")", "$1********$3"
+                AppConstants.SENSITIVE_DATA_REGEX, AppConstants.SENSITIVE_MASK_DATA
         );
     }
 }

@@ -1,5 +1,6 @@
 package com.user.userServiceSpringApplication.config;
 
+import com.user.userServiceSpringApplication.constants.AppConstants;
 import org.flywaydb.core.Flyway;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.annotation.Bean;
@@ -15,7 +16,7 @@ public class FlywayConfig {
     public Flyway userFlyway(@Qualifier("userDataSource")DataSource ds){
         return Flyway.configure()
                 .dataSource(ds)
-                .locations("classpath:db/migration/user")
+                .locations(AppConstants.USER_FLYWAY_MIGRATION_LOCATION)
                 .baselineOnMigrate(true)
                 .load();
     }
@@ -24,7 +25,7 @@ public class FlywayConfig {
     public Flyway outBoxFlyway(@Qualifier("outboxDataSource")DataSource ds){
         return Flyway.configure()
                 .dataSource(ds)
-                .locations("classpath:db/migration/outbox")
+                .locations(AppConstants.OUTBOX_FLYWAY_MIGRATION_LOCATION)
                 .baselineOnMigrate(true)
                 .load();
     }

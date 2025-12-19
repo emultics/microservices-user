@@ -1,5 +1,6 @@
 package com.user.userServiceSpringApplication.config;
 
+import com.user.userServiceSpringApplication.constants.AppConstants;
 import com.zaxxer.hikari.HikariDataSource;
 import jakarta.persistence.EntityManagerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -34,7 +35,7 @@ public class UserDbConfig {
     @Bean
     public LocalContainerEntityManagerFactoryBean userEntityManagerFactory(EntityManagerFactoryBuilder builder){
         return builder.dataSource(userDataSource())
-                .packages("com.user.userServiceSpringApplication.user.entity")
+                .packages(AppConstants.USER_ENTITY_PACKAGE)
                 .persistenceUnit("userPU")
                 .build();
 
