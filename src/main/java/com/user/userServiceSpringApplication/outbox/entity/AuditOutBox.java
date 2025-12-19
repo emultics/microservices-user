@@ -1,6 +1,7 @@
 package com.user.userServiceSpringApplication.outbox.entity;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import com.user.userServiceSpringApplication.constants.AppConstants;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.JdbcTypeCode;
@@ -16,7 +17,7 @@ import java.util.UUID;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "audit_outbox")
+@Table(name = AppConstants.AUDIT_OUTBOX_ENTITY_NAME)
 public class AuditOutBox {
     @Id
     private UUID id;

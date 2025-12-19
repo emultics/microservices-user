@@ -1,6 +1,6 @@
-package com.user.userServiceSpringApplication.outbox.repo;
+package com.user.userServiceSpringApplication.user.repo;
 
-import com.user.userServiceSpringApplication.outbox.entity.UserKafkaOutbox;
+import com.user.userServiceSpringApplication.user.entity.UserKafkaOutbox;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
